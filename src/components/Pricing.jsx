@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 
 const tiers = [
@@ -33,9 +34,30 @@ const tiers = [
   },
 ];
 
+const faqs = [
+  {
+    q: 'Can I use FluxCRM for free?',
+    a: 'Yes. Our Starter plan is free forever and includes generous limits to get you going.',
+  },
+  {
+    q: 'Do you offer discounts?',
+    a: 'Annual billing includes 2 months free. We also offer startup and nonprofit discounts on request.',
+  },
+  {
+    q: 'How easy is migration?',
+    a: 'Import CSVs from your current tool in minutes. Our team is happy to help with guided onboarding.',
+  },
+  {
+    q: 'Is my data secure?',
+    a: 'We use encryption in transit and at rest, SSO, role-based access, and regular audits.',
+  },
+];
+
 export default function Pricing() {
+  const [open, setOpen] = useState(0);
+
   return (
-    <section id="pricing" className="relative py-24 sm:py-28">
+    <section id="pricing" className="relative py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto">
           <motion.h2
@@ -110,6 +132,67 @@ export default function Pricing() {
             </motion.div>
           ))}
         </div>
+
+        {/* FAQ */}
+        <div className="mt-20 max-w-3xl mx-auto">
+          <motion.h3
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl font-semibold text-center text-neutral-900 dark:text-white"
+          >
+            Frequently asked questions
+          </motion.h3>
+          <div className="mt-8 divide-y divide-neutral-200/70 dark:divide-white/10 rounded-2xl border border-neutral-200/70 dark:border-white/10 overflow-hidden">
+            {faqs.map((item, i) => (
+              <div key={item.q} className="bg-white/70 dark:bg-neutral-900/50 backdrop-blur">
+                <button
+                  onClick={() => setOpen(open === i ? -1 : i)}
+                  className="w-full text-left px-5 py-4 hover:bg-white/80 dark:hover:bg-neutral-900/60 transition flex items-center justify-between"
+                >
+                  <span className="font-medium text-neutral-900 dark:text-white">{item.q}</span>
+                  <span className="ml-4 text-xl leading-none text-neutral-500">{open === i ? '−' : '+'}</span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <div className="px-5 pb-5 text-neutral-600 dark:text-neutral-300">
+                        {item.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mt-20 relative overflow-hidden rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-gradient-to-br from-neutral-900 to-neutral-800 text-white p-8 sm:p-12"
+        >
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 blur-3xl" />
+          <div className="relative grid md:grid-cols-2 gap-6 items-center">
+            <div>
+              <h4 className="text-2xl font-semibold">Ready to elevate your revenue ops?</h4>
+              <p className="mt-2 text-white/80">Start free today and invite your team in minutes. No credit card required.</p>
+            </div>
+            <div className="flex md:justify-end">
+              <a href="#" className="inline-flex items-center rounded-full bg-white text-neutral-900 px-6 py-3 font-semibold shadow hover:opacity-90">Create your workspace</a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
